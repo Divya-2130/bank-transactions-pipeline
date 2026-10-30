@@ -12,3 +12,6 @@
 
 ## Step 5
 - Asked Claude for the orchestrator (retries, timeouts, status, alerts, publish gate), CLI runner and run viewer
+
+## Step 6
+- Asked Claude for the pytest suite (validation, orchestration, idempotency, end-to-end) and a fix for sub-paisa amounts

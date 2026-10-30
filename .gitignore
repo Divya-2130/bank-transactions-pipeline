@@ -227,3 +227,6 @@ output/*.db
 output/*.log
 output/reconciliation_*.json
 output/broken_*.csv
+
+.pytest_cache/
+__pycache__/

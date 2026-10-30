@@ -1,0 +1,13 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.12.4, pytest-9.2.0, pluggy-1.7.0
+rootdir: C:\Users\divya\Documents\bank-transactions-pipeline
+configfile: pytest.ini
+testpaths: tests
+collected 51 items
+
+tests\test_end_to_end.py ...                                             [  5%]
+tests\test_idempotency.py ........                                       [ 21%]
+tests\test_orchestration.py ............                                 [ 45%]
+tests\test_validation.py ............................                    [100%]
+
+============================= 51 passed in 4.53s ==============================

@@ -112,11 +112,13 @@ def _strip(row):
 
 
 def _parse_amount(text):
+    """Return the amount rounded to 2 decimals, or None if it is not a valid positive amount."""
     try:
         value = Decimal(text)
-        if not value.is_finite() or value <= 0:
+        if not value.is_finite():
             return None
-        return value.quantize(Decimal("0.01"))
+        value = value.quantize(Decimal("0.01"))  # round first, so 0.004 becomes 0.00
+        return value if value > 0 else None
     except InvalidOperation:
         return None
 
