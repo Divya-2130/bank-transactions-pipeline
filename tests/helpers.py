@@ -1,4 +1,4 @@
-﻿"""Shared helpers for the tests."""
+"""Shared helpers for the tests."""
 import csv
 import json
 from datetime import datetime
@@ -80,7 +80,7 @@ class Run:
 
 def run_pipeline(tmp_path, transactions=None, accounts=None, txn_path=None, acct_path=None,
                  txn_name="transactions.csv", acct_name="accounts.csv", db_name="bank.db",
-                 run_id=None, started_at=None, as_of=AS_OF, max_reject_rate=1.0,
+                 run_id=None, started_at=None, as_of=AS_OF, max_reject_rate=1.0, summary_mode="incremental",
                  retries=2, timeout=30.0, retry_delay=0.0,
                  inject_failures=None, inject_delays=None):
     tmp_path = Path(tmp_path)
@@ -96,7 +96,7 @@ def run_pipeline(tmp_path, transactions=None, accounts=None, txn_path=None, acct
     ctx = RunContext(conn=conn, run_id=run_id or new_run_id(),
                      accounts_path=acct_path, transactions_path=txn_path,
                      output_dir=out_dir, max_reject_rate=max_reject_rate,
-                     as_of=as_of, **extra)
+                     as_of=as_of, summary_mode=summary_mode, **extra)
     orchestrator = Orchestrator(
         specs=default_specs(retries=retries, timeout=timeout),
         notifier=Notifier(out_dir / "alerts.log"),

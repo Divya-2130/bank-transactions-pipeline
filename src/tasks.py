@@ -60,6 +60,7 @@ class RunContext:
     transactions_path: Path
     output_dir: Path = Path("output")
     max_reject_rate: float = 0.10
+    summary_mode: str = "incremental"  # "full" rebuilds everything (kept for benchmarking)
     as_of: datetime = field(default_factory=datetime.now)
     started_at: str = field(
         default_factory=lambda: datetime.now().isoformat(timespec="seconds")
@@ -351,6 +352,45 @@ def quality_gate(ctx):
             f"reject rate {rate:.1%} is above the allowed {ctx.max_reject_rate:.1%}")
 
 
+_SUMMARY_INSERT = (
+    "INSERT OR REPLACE INTO daily_account_summary (account_id, txn_date, total_credits, "
+    "total_debits, net_amount, txn_count) "
+)
+_SUMMARY_AGGREGATES = (
+    "ROUND(SUM(CASE WHEN c.txn_type = 'credit' THEN c.amount ELSE 0 END), 2), "
+    "ROUND(SUM(CASE WHEN c.txn_type = 'debit' THEN c.amount ELSE 0 END), 2), "
+    "ROUND(SUM(CASE WHEN c.txn_type = 'credit' THEN c.amount ELSE -c.amount END), 2), "
+    "COUNT(*) "
+)
+
+
+def _rebuild_summary_full(conn):
+    """Recompute the whole daily summary. Cost grows with ALL history."""
+    conn.execute("DELETE FROM daily_account_summary")
+    conn.execute(
+        _SUMMARY_INSERT + "SELECT c.account_id, c.txn_date, " + _SUMMARY_AGGREGATES
+        + "FROM clean_transactions c GROUP BY c.account_id, c.txn_date")
+
+
+def _refresh_summary_incremental(conn, publish_txns):
+    """Recompute only the (account, date) pairs touched by this batch.
+    Cost grows with the NEW data, not with history. Late-arriving rows are
+    handled because their true date is one of the touched pairs."""
+    pairs = {(t[1], t[6]) for t in publish_txns}  # (account_id, txn_date)
+    if not pairs:
+        return
+    conn.execute("CREATE TEMP TABLE IF NOT EXISTS affected_days "
+                 "(account_id TEXT, txn_date TEXT)")
+    conn.execute("DELETE FROM affected_days")
+    conn.executemany(
+        "INSERT INTO affected_days (account_id, txn_date) VALUES (?, ?)", pairs)
+    conn.execute(
+        _SUMMARY_INSERT + "SELECT c.account_id, c.txn_date, " + _SUMMARY_AGGREGATES
+        + "FROM clean_transactions c JOIN affected_days a "
+        "ON c.account_id = a.account_id AND c.txn_date = a.txn_date "
+        "GROUP BY c.account_id, c.txn_date")
+
+
 def publish(ctx):
     """Load clean data. Idempotent: running the same input twice adds nothing new."""
     conn = ctx.conn
@@ -381,16 +421,11 @@ def publish(ctx):
             "ON CONFLICT(transaction_id) DO NOTHING", ctx.publish_txns)
         inserted = conn.total_changes - before
 
-        # Rebuild the summary from clean data (also handles late-arriving rows)
-        conn.execute("DELETE FROM daily_account_summary")
-        conn.execute(
-            "INSERT INTO daily_account_summary (account_id, txn_date, total_credits, "
-            "total_debits, net_amount, txn_count) "
-            "SELECT account_id, txn_date, "
-            "ROUND(SUM(CASE WHEN txn_type = 'credit' THEN amount ELSE 0 END), 2), "
-            "ROUND(SUM(CASE WHEN txn_type = 'debit' THEN amount ELSE 0 END), 2), "
-            "ROUND(SUM(CASE WHEN txn_type = 'credit' THEN amount ELSE -amount END), 2), "
-            "COUNT(*) FROM clean_transactions GROUP BY account_id, txn_date")
+        # Keep the daily summary up to date (also handles late-arriving rows)
+        if ctx.summary_mode == "full":
+            _rebuild_summary_full(conn)
+        else:
+            _refresh_summary_incremental(conn, ctx.publish_txns)
 
     ctx.metrics["rows_inserted_new"] = inserted
 
