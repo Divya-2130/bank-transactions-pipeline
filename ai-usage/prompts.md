@@ -9,3 +9,6 @@
 
 ## Step 4
 - Asked Claude for the database schema, pipeline tasks, smoke runner and label verifier
+
+## Step 5
+- Asked Claude for the orchestrator (retries, timeouts, status, alerts, publish gate), CLI runner and run viewer

@@ -223,3 +223,7 @@ data/generated/
 data/generated_labels/
 
 output/*.db
+
+output/*.log
+output/reconciliation_*.json
+output/broken_*.csv

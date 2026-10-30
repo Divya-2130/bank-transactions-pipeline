@@ -1,4 +1,4 @@
-﻿"""Pipeline tasks.
+"""Pipeline tasks.
 
 Each task receives a RunContext, does ONE job, and raises an exception on failure.
 Tasks run in the order listed in PIPELINE at the bottom of this file.
@@ -281,6 +281,11 @@ def _validate_transactions(ctx):
 
 def validate_rules(ctx):
     """Business-rule checks. Bad rows go to reject lists; good rows to clean lists."""
+    # Start from empty lists so a retry never double-counts rows
+    ctx.clean_accounts.clear()
+    ctx.clean_txns.clear()
+    ctx.account_rejects.clear()
+    ctx.txn_rejects.clear()
     _validate_accounts(ctx)
     _validate_transactions(ctx)
     ctx.metrics.update({
