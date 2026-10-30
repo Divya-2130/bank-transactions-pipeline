@@ -1,0 +1,35 @@
+{
+  "run_id": "smoke_20261030T123736",
+  "generated_at": "2026-10-30T12:37:38",
+  "metrics": {
+    "accounts_in": 2000,
+    "accounts_rejected": 0,
+    "rows_in": 100000,
+    "rows_clean": 95000,
+    "rows_rejected": 5000,
+    "rows_inserted_new": 95000
+  },
+  "checks": [
+    {
+      "check": "source_equals_clean_plus_rejected",
+      "passed": true,
+      "detail": "input 100000 = clean 95000 + rejected 5000"
+    },
+    {
+      "check": "all_clean_rows_present_in_target",
+      "passed": true,
+      "detail": "0 clean rows missing from target"
+    },
+    {
+      "check": "summary_net_equals_transaction_net",
+      "passed": true,
+      "detail": "summary 9075073.15 vs transactions 9075073.15"
+    },
+    {
+      "check": "summary_count_equals_transaction_count",
+      "passed": true,
+      "detail": "summary 95000 vs table 95000"
+    }
+  ],
+  "all_passed": true
+}

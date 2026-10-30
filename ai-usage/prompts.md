@@ -6,3 +6,6 @@
 
 ## Step 3
 - Asked Claude for the synthetic data generator with labelled bad rows and an answer key
+
+## Step 4
+- Asked Claude for the database schema, pipeline tasks, smoke runner and label verifier

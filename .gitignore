@@ -221,3 +221,5 @@ __marimo__/
 
 data/generated/
 data/generated_labels/
+
+output/*.db
