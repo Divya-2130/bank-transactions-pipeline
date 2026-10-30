@@ -1,0 +1,21 @@
+account_id,customer_name,account_type,status,opened_date
+ACC00001,Anita Sharma,current,active,2021-05-16
+ACC00002,Kiran Rao,current,active,2023-01-21
+ACC00003,Ravi Singh,savings,active,2020-07-10
+ACC00004,Kiran Naidu,current,active,2024-01-06
+ACC00005,Anita Nair,savings,active,2023-04-21
+ACC00006,Sneha Mehta,current,active,2020-11-22
+ACC00007,Suresh Gupta,savings,active,2021-03-16
+ACC00008,Divya Iyer,current,active,2020-07-17
+ACC00009,Arjun Joshi,savings,active,2024-07-10
+ACC00010,Asha Nair,savings,active,2022-02-14
+ACC00011,Ravi Patel,savings,frozen,2023-06-20
+ACC00012,Manoj Iyer,current,active,2020-04-03
+ACC00013,Anita Naidu,savings,closed,2024-10-17
+ACC00014,Kiran Joshi,current,active,2022-07-17
+ACC00015,Anita Joshi,savings,active,2021-12-28
+ACC00016,Kiran Kumar,savings,active,2023-10-31
+ACC00017,Anita Sharma,current,active,2021-05-16
+ACC00018,Meena Das,savings,active,2023-08-03
+ACC00019,Suresh Patel,current,active,2024-09-22
+ACC00020,Divya Mehta,current,active,2020-03-06
