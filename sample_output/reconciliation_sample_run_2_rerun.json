@@ -1,0 +1,35 @@
+{
+  "run_id": "sample_run_2_rerun",
+  "generated_at": "2026-10-30T13:45:38",
+  "metrics": {
+    "accounts_in": 20,
+    "accounts_rejected": 0,
+    "rows_in": 60,
+    "rows_clean": 30,
+    "rows_rejected": 30,
+    "rows_inserted_new": 0
+  },
+  "checks": [
+    {
+      "check": "source_equals_clean_plus_rejected",
+      "passed": true,
+      "detail": "input 60 = clean 30 + rejected 30"
+    },
+    {
+      "check": "all_clean_rows_present_in_target",
+      "passed": true,
+      "detail": "0 clean rows missing from target"
+    },
+    {
+      "check": "summary_net_equals_transaction_net",
+      "passed": true,
+      "detail": "summary -17098.55 vs transactions -17098.55"
+    },
+    {
+      "check": "summary_count_equals_transaction_count",
+      "passed": true,
+      "detail": "summary 30 vs table 30"
+    }
+  ],
+  "all_passed": true
+}

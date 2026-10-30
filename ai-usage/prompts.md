@@ -18,3 +18,6 @@
 
 ## Step 7
 - Asked Claude for a benchmark script and an incremental daily-summary optimization with a test proving identical results
+
+## Step 8
+- Asked Claude for the sample-output generator, README draft and design/trade-off note
