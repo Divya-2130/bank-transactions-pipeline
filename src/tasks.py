@@ -418,7 +418,8 @@ def publish(ctx):
             "INSERT INTO clean_transactions (transaction_id, account_id, amount, "
             "txn_type, currency, transaction_time, txn_date, run_id, source_file, "
             "row_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
-            "ON CONFLICT(transaction_id) DO NOTHING", ctx.publish_txns)
+            "ON CONFLICT(transaction_id) DO NOTHING",
+            sorted(ctx.publish_txns, key=lambda t: t[0]))  # sorted inserts are faster
         inserted = conn.total_changes - before
 
         # Keep the daily summary up to date (also handles late-arriving rows)

@@ -90,6 +90,7 @@ def connect(db_path):
     path = Path(db_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(path, check_same_thread=False)
+    conn.execute("PRAGMA cache_size=-65536")  # 64 MB page cache: faster inserts into big indexes
     conn.executescript(SCHEMA)
     conn.commit()
     return conn
