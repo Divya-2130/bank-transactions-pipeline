@@ -151,8 +151,11 @@ Okay, in Notepad, a usage prompts.md. What are the sentences did I need to paste
 \[Pasted terminal output: pytest results (53 passed), performance\_results.md, git commands, and the fresh clone test.]
 
 
-## 25. Performance investigation
-[Pasted the three timing results of the insert-order and cache test.]
+
+\# 17. Performance investigation
+
+\[Pasted the three timing results of the insert-order and cache test.]
 shuffled order (like the real file)         2.81 s
-sorted by transaction_id                    1.48 s
+sorted by transaction\_id                    1.48 s
 shuffled order + bigger cache (64 MB)       0.86 s
+
