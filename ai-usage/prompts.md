@@ -146,3 +146,7 @@ Okay, in Notepad, a usage prompts.md. What are the sentences did I need to paste
 
 '@ | Set-Content -Path ai-usage\\prompts.md -Encoding utf8
 
+\##  17.Final checks
+
+\[Pasted terminal output: pytest results (53 passed), performance\_results.md, git commands, and the fresh clone test.]
+

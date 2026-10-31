@@ -1,4 +1,4 @@
-﻿# Design and trade-off note
+# Design and trade-off note
 
 ## Scope
 A complete, tested vertical slice for one data domain (bank transactions), run locally.
@@ -31,4 +31,4 @@ Unit and integration tests (see `docs/test_results.txt`), an end-to-end test tha
 reconciliation checks on every run, and the committed evidence in `sample_output/`.
 
 ## Performance
-[FILL IN: two or three sentences in your own words, using the numbers in `docs/performance_results.md`.]
+A first load of 100,000 rows takes about 3 seconds on my laptop, and `publish` is the slowest task. In a daily load of 1,000 new rows on top of 190,000 existing rows, refreshing only the affected (account, date) summary rows instead of rebuilding the whole summary made `publish` about 9 times faster (1.649 s to 0.176 s), with an identical result. `validate_rules` and `reconcile` still read the whole history, so they are the next things to optimise.

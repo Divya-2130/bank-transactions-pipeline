@@ -1,4 +1,4 @@
-﻿# Bank Transactions Pipeline
+# Bank Transactions Pipeline
 
 An orchestrated data pipeline for synthetic bank transactions. It reads two CSV files,
 validates them, quarantines bad rows with a reason, publishes clean data to SQLite, and
@@ -69,7 +69,7 @@ Naming: snake_case, ISO-8601 timestamps, deterministic IDs (`ACC00001`, `TXN0000
 
 ## Testing
 
-`python -m pytest` runs [FILL IN: number] tests; results are saved in `docs/test_results.txt`. They cover:
+`python -m pytest` runs 53 tests; results are saved in `docs/test_results.txt`. They cover:
 happy path, empty input, zero-byte file, malformed rows, every required field empty, invalid values,
 duplicates and conflicts, schema change, invalid account reference, closed accounts, late and
 out-of-order data, retries, timeouts, the quality gate, all-or-nothing publish, reruns, restarts,
@@ -83,7 +83,12 @@ a rerun adds nothing, and the rejects match the answer key exactly. Each run als
 
 ## Performance
 
-[FILL IN with your own numbers from `docs/performance_results.md`: time for 100,000 rows, the slowest task, and the publish time before and after the optimization.]
+Measured on my laptop (Windows 11, 12 CPU threads, Python 3.12, SQLite 3.45), full details in `docs/performance_results.md`.
+
+- A first load of 100,000 rows took 3.00 s (about 33,000 rows per second). 200,000 rows took 7.69 s.
+- The slowest task is `publish` (1.96 s of 3.00 s at 100,000 rows). Throughput drops as the input grows (about 48,000 rows per second at 10,000 rows and 26,000 at 200,000), and I did not investigate why.
+- Daily load: a 1,000-row file on top of a 190,000-row history. `publish` went from 1.649 s to 0.176 s (9.3x faster) and the whole run from 2.381 s to 0.862 s. The daily summary table was identical in both modes.
+- Each size was measured once, so small differences are noise. The daily-load comparison uses the median of 3 runs.
 
 Optimization: the daily summary is now refreshed only for the (account, date) pairs in the new batch instead of being rebuilt from all history. A test and the benchmark both check that the result is identical to a full rebuild.
 
@@ -95,7 +100,9 @@ See `ai-usage/prompts.md` (all prompts) and `ai-usage/reflection.md` (where AI h
 
 - One currency (INR). Files are small enough to hold in memory. Timestamps with an offset are converted to UTC.
 - "Now" for the future-date rule is the time of the run.
-- [FILL IN any assumption you made yourself.]
+- The reject-rate limit of 10% is a default and can be changed with `--max-reject-rate`.
+- The committed sample is 50% bad on purpose, so the sample run uses a 60% limit.
+- The first version of a transaction wins when the same ID arrives again with different content.
 
 ## Known limitations
 
