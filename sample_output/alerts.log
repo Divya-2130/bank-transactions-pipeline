@@ -1,0 +1,1 @@
+{"time": "2026-10-30T13:45:38", "level": "CRITICAL", "run_id": "sample_run_3_blocked", "message": "task 'quality_gate' failed after 1 attempt(s): QualityGateError: reject rate 50.0% is above the allowed 10.0% | publish was BLOCKED: nothing was published"}
